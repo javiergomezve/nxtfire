@@ -1,8 +1,12 @@
+import Metatags from "../../components/Metatags";
+
 const SlugPage = () => {
 
     return (
         <main>
-            <h1>Slug</h1>
+            <Metatags title="admin page"/>
+
+            <h1>Edit post</h1>
         </main>
     );
 };
