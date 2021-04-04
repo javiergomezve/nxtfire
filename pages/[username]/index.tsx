@@ -1,8 +1,42 @@
-const UserPage = () => {
+import React from 'react';
+
+import {getUserWithUsername, postToJSON} from '../../lib/firebase';
+import UserProfile from '../../components/UserProfile';
+import PostFeed from '../../components/PostFeed';
+
+export async function getServerSideProps({query}) {
+    // url
+    const {username} = query;
+    console.log('username', username)
+
+    const userDoc = await getUserWithUsername(username);
+
+    let user = null;
+    let posts = null;
+
+    if (userDoc) {
+        user = userDoc.data();
+
+        const postsQuery = userDoc.ref
+            .collection('posts')
+            .where('published', '==', true)
+            .orderBy('createdAt', 'desc')
+            .limit(5);
+
+        posts = (await postsQuery.get()).docs.map(postToJSON);
+    }
+
+    return {
+        props: { user, posts },
+    };
+}
+
+const UserPage = ({user, posts}) => {
 
     return (
         <main>
-            <h1>User</h1>
+            <UserProfile user={user} />
+            <PostFeed posts={posts} admin={false} />
         </main>
     );
 };
