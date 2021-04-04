@@ -21,6 +21,12 @@ const AdminPostEdit = () => {
 
 export default AdminPostEdit;
 
+interface IPost {
+    title: string;
+    slug: string;
+    username: string;
+}
+
 const PostManager = () => {
     const [preview, setPreview] = useState(false);
 
@@ -30,7 +36,7 @@ const PostManager = () => {
     const postRef = firestore.collection('users').doc(auth.currentUser.uid)
         .collection('posts').doc(slug.toString());
 
-    const [post] = useDocumentData(postRef);
+    const [post] = useDocumentData<IPost>(postRef);
 
     return (
         <main className={styles.container}>

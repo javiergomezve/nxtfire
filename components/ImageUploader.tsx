@@ -9,7 +9,9 @@ const ImageUploader = () => {
     const [downloadURL, setDownloadURL] = useState(null);
 
     const uploadFile = async (e) => {
-        const file = Array.from(e.target.files)[0];
+        /** @type {File} */
+        let file;
+        file = Array.from(e.target.files)[0];
         const extension = file.type.split('/')[1];
 
         const ref = storage.ref(`uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`);
@@ -19,7 +21,7 @@ const ImageUploader = () => {
 
         task.on(STATE_CHANGED, (snapshot) => {
             const pct = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
-            setProgress(pct);
+            setProgress(parseInt(pct));
 
             // looks like promise but its not an exactly one
             task.then((d) => ref.getDownloadURL())
